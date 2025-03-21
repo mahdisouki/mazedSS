@@ -56,44 +56,44 @@ initializeSocket(server);
 app.use('/bid', bidRoute);
 
 // Example Cron Job to handle expired bids
-cron.schedule('* * * * *', async () => {
-    try {
-        console.log("Cron job started");
+// cron.schedule('* * * * *', async () => {
+//     try {
+//         console.log("Cron job started");
 
-        const expiredBids = await Enchere.find({
-            datefermeture: { $lte: new Date() },
-            SmsSent: { $ne: true }, // Ensure email hasn't already been sent
-        }).populate('highestBidder'); // Ensure you get highestBidder details
+//         const expiredBids = await Enchere.find({
+//             datefermeture: { $lte: new Date() },
+//             SmsSent: { $ne: true }, // Ensure email hasn't already been sent
+//         }).populate('highestBidder'); // Ensure you get highestBidder details
 
-        console.log(`Found ${expiredBids.length} expired bids`);
+//         console.log(`Found ${expiredBids.length} expired bids`);
 
-        for (const bid of expiredBids) {
-            console.log(`Processing bid with id: ${bid._id}`);
+//         for (const bid of expiredBids) {
+//             console.log(`Processing bid with id: ${bid._id}`);
 
-            if (bid.highestBidder && bid.highestBidder.email) {
-                console.log(`Sending email to ${bid.highestBidder.email}`);
+//             if (bid.highestBidder && bid.highestBidder.email) {
+//                 console.log(`Sending email to ${bid.highestBidder.email}`);
 
-                // Send an email to the highest bidder
-                sendEmail(
-                    bid.highestBidder.email,
-                    'Congratulations! You won the bid!',
-                    `Dear ${bid.highestBidder.name},\n\nYou have won the bid with an amount of ${bid.highestBid}.`
-                );
+//                 // Send an email to the highest bidder
+//                 sendEmail(
+//                     bid.highestBidder.email,
+//                     'Congratulations! You won the bid!',
+//                     `Dear ${bid.highestBidder.name},\n\nYou have won the bid with an amount of ${bid.highestBid}.`
+//                 );
                 
-                // Mark the bid as email sent
-                bid.SmsSent = true;
-                await bid.save();
-                console.log(`Email sent and bid updated: ${bid._id}`);
-            } else {
-                console.log(`No highest bidder or no email for bid: ${bid._id}`);
-            }
-        }
+//                 // Mark the bid as email sent
+//                 bid.SmsSent = true;
+//                 await bid.save();
+//                 console.log(`Email sent and bid updated: ${bid._id}`);
+//             } else {
+//                 console.log(`No highest bidder or no email for bid: ${bid._id}`);
+//             }
+//         }
 
-        console.log("Cron job finished");
-    } catch (error) {
-        console.log('Error in cron job:', error);
-    }
-});
+//         console.log("Cron job finished");
+//     } catch (error) {
+//         console.log('Error in cron job:', error);
+//     }
+// });
 
 // Start the application server
 const PORT = process.env.PORT || 7000;
