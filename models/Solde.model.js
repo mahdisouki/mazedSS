@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const User = require('../models/User.model')
 // Define the Solde schema
 const SoldeSchema = new mongoose.Schema({
     soldeMazed: {
@@ -10,12 +10,7 @@ const SoldeSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    user: { 
-        type: {
-            _id: { type: mongoose.Schema.Types.Mixed, ref: 'user', required: true },
-        },
-        required: true
-    }
+    user:User.schema
 }, {
     timestamps: true // Automatically add createdAt and updatedAt fields
 });

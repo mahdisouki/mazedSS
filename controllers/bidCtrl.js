@@ -40,8 +40,8 @@ join: async (req, res) => {
     try {
         const { bidId, amount } = req.body;
         const pseudo = req.user.sub;
-
-        const balance = await Solde.findOne({ 'user.pseudo': pseudo }).populate('user');
+       
+        const balance = await Solde.findOne({ 'user.pseudo': pseudo });
         if (!balance) {
             return res.status(404).send({ error: "Balance not found" });
         }
@@ -50,7 +50,7 @@ join: async (req, res) => {
         if (!bid) {
             return res.status(404).send({ error: "Bid not found" });
         }
-        console.log(balance.user._id)
+        console.log('user:',balance.user)
         if (!bid.participantIds.some(p => p._id.equals(balance.user._id))) {
             return res.status(403).send({ error: "You are not a participant in this bid" });
         }
@@ -63,7 +63,7 @@ join: async (req, res) => {
             return res.status(400).send({ error: "Bid time has ended" });
         }
 
-        if ((bid.highestBid || 0) + amount >= bid.prixMazedAchat) {
+        if ((bid.highestBid || 0) + amount >= bid.prixPlafond) {
             bid.status = "Terminée";
             bid.datefermeture = new Date();
             await bid.save({ validateBeforeSave: false }).catch((err) => {

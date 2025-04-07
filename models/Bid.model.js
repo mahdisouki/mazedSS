@@ -13,11 +13,10 @@ const enchereSchema = new Schema({
   ville: String,
   delegationAr: String,
   prixMazedOnline: Number,
-  prixMazedAchat: Number,
+  prixPlafond: Number,
   nombreParticipantAttendu: Number,
   extensionTime: Number,
   nombreMois: Number,
-  galerie: [String],
   description: String,
   nomProduit: {
     type: String,

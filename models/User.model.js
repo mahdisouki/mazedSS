@@ -2,18 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Assuming these roles, adjust as needed
-const roleUserEnum = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_BUYER_SELLER'];
+const roleUserEnum = ['Acheteur', 'Vendeur', 'Admin'];
 
 const utilisateurSchema = new Schema({
   nomFamille: { type: String, required: true },
-  Prenom: { type: String, required: true },
+  Prenom: { type: String},
   numTel: String,
+  pseudo:{type:String},
   email: {
     type: String,
     required: true,
     match: [/.+\@.+\..+/, 'Please fill a valid email address']
   },
-  motdePasse: { type: String, required: true },
+  motdePasse: { type: String},
   role: {
     type: String,
     enum: roleUserEnum,
