@@ -8,16 +8,16 @@ function initializeSocket(server) {
     io = new Server(server);
 
     // // Create Redis clients
-    // const pubClient = new Redis({
-    //     host: 'clustercfg.redis-cache.k7pfd9.use1.cache.amazonaws.com', // Replace with your ElastiCache endpoint
-    //     port: 6379,
-    //     password: 'yourSecureAuthToken123', // Include this if you've set a password
-    // });
+    const pubClient = new Redis({
+        host: 'web.bidor.info', // Replace with your ElastiCache endpoint
+        port: 6379,
+        password: 'demo@bidor', // Include this if you've set a password
+    });
 
-    // const subClient = pubClient.duplicate(); // Duplicate the publisher client for subscription
+    const subClient = pubClient.duplicate(); // Duplicate the publisher client for subscription
 
     // // Use socket.io Redis adapter
-    // io.adapter(RedisAdapter({ pubClient, subClient }));
+    io.adapter(RedisAdapter({ pubClient, subClient }));
 
     io.on('connection', (socket) => {
         console.log('User connected:', socket.id);

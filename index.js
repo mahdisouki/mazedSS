@@ -6,10 +6,10 @@ const bidRoute = require('./routes/BidRoute');
 const mongoose = require('mongoose');
 const { initializeSocket } = require('./socket');
 const session = require('express-session');
-// const Redis = require('ioredis');
+const Redis = require('ioredis');
 const cron = require('node-cron');
 const Enchere = require("./models/Bid.model");
-// const RedisStore = require('connect-redis').default;
+const RedisStore = require('connect-redis').default;
 const sendEmail = require('./sendEmail');
 require('dotenv').config();
 
@@ -18,11 +18,11 @@ const app = express();
 const server = http.createServer(app);
 
 // Connect to Redis
-// const redisClient = new Redis({
-//     host: 'clustercfg.redis-cache.k7pfd9.use1.cache.amazonaws.com', // e.g., Redis ElastiCache endpoint
-//     port: 6379,              // Default Redis port
-//     password: 'mySecureAuthToken123', // If your Redis setup uses password
-// });
+const redisClient = new Redis({
+    host: 'web.bidor.info', // e.g., Redis ElastiCache endpoint
+    port: 6379,              // Default Redis port
+    password: 'demo@bidor', // If your Redis setup uses password
+});
 
 // Configure JSON parsing for express
 app.use(express.json());
@@ -37,20 +37,20 @@ mongoose.connect("mongodb+srv://tsast2023:ydNrpqZADUIYJP3y@cluster0.b7tqviv.mong
 initializeSocket(server);
 
 // Configure Express session with Redis store
-// app.use(
-//     session({
-//         secret: process.env.SESSION_SECRET || "SessionSecret", // Secret from environment variables
-//         store: new RedisStore({ client: redisClient }), // Use Redis for session storage
-//         resave: false,
-//         saveUninitialized: false,
-//         cookie: {
-//             secure: process.env.ENVIRONMENT === "production" ? true : false,
-//             httpOnly: true,
-//             expires: 1000 * 60 * 60 * 24 * 7, // 7 days
-//             sameSite: process.env.ENVIRONMENT === "production" ? "none" : "lax",
-//         },
-//     })
-// );
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || "SessionSecret", // Secret from environment variables
+        store: new RedisStore({ client: redisClient }), // Use Redis for session storage
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: process.env.ENVIRONMENT === "production" ? true : false,
+            httpOnly: true,
+            expires: 1000 * 60 * 60 * 24 * 7, // 7 days
+            sameSite: process.env.ENVIRONMENT === "production" ? "none" : "lax",
+        },
+    })
+);
 
 // Routes
 app.use('/bid', bidRoute);
